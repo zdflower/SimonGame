@@ -1,0 +1,46 @@
+body {
+	background-color: #eee;
+}
+
+.container {
+	background-color: #fff;
+	margin: auto;
+	text-align: center;
+}
+
+#display {
+	border-top-left-radius: 50%;
+	border-top-right-radius: 50%;
+	border-bottom-left-radius: 50%;
+	border-bottom-right-radius: 50%;
+	background-color: orchid;
+	width: 160px;
+	margin: auto;
+}
+
+#red, #yellow, #blue, #green {
+	margin: auto;
+	width: 60px;
+	height: 40px;
+}
+
+#red {
+	background-color: red;
+}
+
+#blue {
+	background-color: blue;
+}
+
+#green {
+	background-color: green;
+}
+
+#yellow {
+	background-color: yellow;
+}
+
+
+#msg {
+	display: none; /* va a ser para mostrar los mensajes de error / victoria, permanece oculto hasta que haya que mostrar algún mensaje*/
+}
