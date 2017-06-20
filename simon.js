@@ -44,7 +44,7 @@ function checkPlay(seq1, seq2){ //revisar que funcione como supongo
 }
 
 
-function mostrarSecuencia(simon){
+function mostrarSecuencia0(simon){
 	//necesito los ids de los elementos de la página y necesito los colores claros
 	//inicialmente los pongo acá adentro, no sé bien dónde corresponde que estén.
 	var COLORESmap = {'red' : 'pink', 'blue' : 'skyblue', 'green':'lime', 'yellow':'purple'}; //les pongo cualquier cosa, después veo cuál es el código para colores más claros
@@ -170,5 +170,5 @@ function testCheckPlay(){
 //testSimon();
 //testCheckPlay();
 //jugar();
-game();
+//game();
 //export {chooseOne};

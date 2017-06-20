@@ -2,28 +2,153 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Simon Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 <main class="container">
-<div class="colores" id="red"></div>
+<button class="colores" id="red"></button>
 
-<div class="colores" id="green"></div>
+<button class="colores" id="green"></button>
 <div id="display">
 	<h3>Simon</h3>
-	<div id="modo">Normal</div><!-- podría ser que se clickee y cambie el texto de Normal a Estricto y viceversa -->
-	<div id="restart">Restart</div>
+	<button id="modo">Normal</button><!-- podría ser que se clickee y cambie el texto de Normal a Estricto y viceversa -->
+	<button id="restart">Restart</button>
 	<div id="etapa">Etapa</div>
 </div>
-<div class="colores" id="blue"></div>
+<button class="colores" id="blue"></button>
 
-<div class="colores" id="yellow"></div>
+<button class="colores" id="yellow"></button>
 
 <div id="msg"></div>
-</main>
 
-    <script type="text/javascript" src="simon.js"></script>
+<audio src="" id="audio" controls>audio</audio>
+</main>
+<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="simon.js"></script>
+<script type="text/javascript">
+/* FALTA
+- una función que maneje el click del botón de resetear, o quizá asociarlo a start...
+- mostrar la secuencia del simon en la página web
+- que al mostrar la secuencia además se ejecuten los efectos de sonido correspondientes
+- que al clickear los botones se ejecuten los efectos de sonido correspondientes
+- manejar el botón del modo para configurarlo como estricto o normal, pero que se pueda hacer sólo al comienzo de start, tal vez en la función start se debería habilitar la configuración del modo ¿pero por cuánto tiempo, cómo se hace esto? y luego deshabilitarla... Inicialmente y si no se cambia va a ser normal. 
+*/
+
+
+//tenés varios estados:
+//el de mostrar secuencia
+//el de input
+//el de configuración del modo
+
+/* efecto de sonido
+var sonido = document.getElementById('audio');
+sonido.setAttribute('src', 'CustardPie.mp3');
+sonido.volume = 0.4;
+*/
+
+var sim;
+var modo = 'normal';
+var restart = false;
+var input = true;
+var jugadaOK = true;
+var jugador;
+//coloresmap era para cambiarle los colores, pero debe haber otra forma...
+var COLORESmap = {'red': 'pink', 'blue': 'skyblue', 'green': 'lime', 'yellow': 'sand'};
+
+function start(){
+	sim = new Simon();
+	//console.log("Etapa: " + sim.getStage());
+	siguienteEtapa();
+	mostrarSecuencia();
+}
+
+function siguienteEtapa(){
+	//si ya se llegó a las 20 entonces mostrar el mensaje que ganó y volver a llamar a restart
+	//si no agregar nuevo paso
+	console.log("siguiente etapa");
+	if (sim.getStage() > 3){//3 para testear, reemplazar por 20
+		mostrarMsgGano();
+		start();
+	} else {
+		console.log("antes de agregar etapa");
+		console.log(sim.getStage());
+		sim.addNewStep();
+		console.log("agrego nuevo paso");
+	}
+	//mostrar la etapa en la página
+	$('#etapa').text(sim.getStage());
+}
+
+//cuando se llama a mostrarSecuencia se supone que ya se empezó a jugar y que hay un simon y al menos se agregó 1 paso
+function mostrarSecuencia(){
+	//setear input a false
+	//mostrar la secuencia de sim
+	//setear el input a true
+    input = false;
+    console.log(sim.getSequence());
+    //acá lo que habría que hacer es mostrar en la página la secuencia de colores y los sonidos
+    //¿podría ser con un trigger del click de los botones? me parece que sí, ver cómo sería
+    input = true;
+}
+
+function manejarJugadaErronea(){
+	input = false;
+	mostrarMsgError();
+	//si el modo es normal, volver a mostrar la secuencia del sim, y al final habilitar el input
+	//si el modo es estricto, ir a start 
+	(modo == 'normal')? mostrarSecuencia() : start();
+}
+
+$(document).ready(function(){
+	start();
+    var chequeados = 0;
+
+	$('.colores').on('click', function(){
+	    /* efecto de sonido al clickear
+	    sonido.play();
+	    */
+	    var color = $(this).attr('id');
+
+	    console.log(color);
+		console.log("input: ", input);
+
+		if (input){
+			jugador = color;
+
+			console.log(sim.getSequence());
+			console.log("Stage:" + sim.getStage());
+			console.log(sim.getSequence()[chequeados]);
+
+			jugadaOK = sim.getSequence()[chequeados] == jugador;
+
+			console.log("jugadaOK" + jugadaOK);
+			
+			if(!jugadaOK){
+				//desactivás el input
+				//llamás a una función que te indica el error y que luego si el modo es normal te vuelve a mostrar la secuencia y después rehabilita el input para que el usuario pueda ingresar su secuencia
+				manejarJugadaErronea();
+			} else {
+				chequeados++;
+			}
+		}
+		//cómo llegás acá? una vez que hiciste bien la secuencia completa
+
+		console.log("chequeados: " + chequeados);
+		console.log('stage: ', sim.getStage());
+		console.log(sim.getSequence().length);
+		console.log(sim.getStage() === sim.getSequence().length);
+
+		if (chequeados >= sim.getSequence().length){
+			//resetear chequeados para la siguiente etapa
+			chequeados = 0;
+			siguienteEtapa();
+			mostrarSecuencia(); 	
+		}
+	});
+
+});
+</script>
 </body>
 </html>
