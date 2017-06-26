@@ -40,7 +40,6 @@ body {
 	background-color: yellow;
 }
 
-
 #msg {
 	display: none; /* va a ser para mostrar los mensajes de error / victoria, permanece oculto hasta que haya que mostrar algún mensaje*/
 }

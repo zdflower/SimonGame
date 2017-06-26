@@ -43,33 +43,7 @@ function checkPlay(seq1, seq2){ //revisar que funcione como supongo
 	return res; 
 }
 
-
-function mostrarSecuencia0(simon){
-	//necesito los ids de los elementos de la página y necesito los colores claros
-	//inicialmente los pongo acá adentro, no sé bien dónde corresponde que estén.
-	var COLORESmap = {'red' : 'pink', 'blue' : 'skyblue', 'green':'lime', 'yellow':'purple'}; //les pongo cualquier cosa, después veo cuál es el código para colores más claros
-	//para cada elemento de la secuencia, cambiarle el color a el correspondiente color claro y esperar un segundo más o menos y volver al color anterior
-	var color;
-	//lo que tiene de malo esto es que requiere que los ids tengan los nombres de los colores de css
-	//pienso que debería ser independiente...
-
-	for (var c of simon.getSequence()){
-		color = document.getElementById(c);
-		color.style.background = COLORESmap[c];//lo pasa al clarito
-		//acá debería ir un delay y después volver al color original
-		//color.style.background = c;//el que tenía
-
-		//NO SÉ CÓMO PONER UN DELAY, SÓLO QUIERO QUE ESPERE UN POCO ANTES DE VOLVER AL COLOR ORIGINAL
-		setTimeout(function(){
-			console.log("vuelvo al color original");
-			color.style.background = c;
-		}, 3000);
-	}
-}
-
 //export default Simon;
-
-
 
 
 function testChooseOne(){
@@ -143,12 +117,18 @@ function game(){
 	}
 }
 
+function mostrarMsg(msg){
+	console.log(msg);
+    $('#msg').css('display', 'block');
+     $('#msg').text(msg);    
+}
+
 function mostrarMsgGano(){
-	console.log("¡Ganaste!");
+   mostrarMsg('¡Ganaste!');
 }
 
 function mostrarMsgError(){
-	console.log("Te equivocaste. Volvé a intentar.");
+	mostrarMsg("Te equivocaste. Volvé a intentar.");    
 }
 
 function jugar(){
