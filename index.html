@@ -89,7 +89,7 @@ function siguienteEtapa(){
 	chequeados = 0;
 
 	if (sim.getStage() > 3){//3 para testear, reemplazar por 20
-		mostrarMsgGano();
+		mostrarMsgGano(); //¿puede ser que acá haya un problema, un desfasaje entre mostrar mensaje y empezar de nuevo. Porque cuando termina, se ejecuta mostrar mensaje ganó pero no lo llego a ver en la página y rápidamente pasa a reiniciar el juego.
 		start();
 	} else {
 		console.log("antes de agregar etapa");
@@ -195,8 +195,10 @@ $(document).ready(function(){
 			console.log(sim.getStage() === sim.getSequence().length);
 
 			if (chequeados >= sim.getSequence().length){
-				siguienteEtapa();
-				mostrarSecuencia(); 	
+                setTimeout(function(){
+                    siguienteEtapa();
+				    mostrarSecuencia(); 	
+                }, 3000);
 			}
 		}
 	});

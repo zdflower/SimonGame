@@ -120,7 +120,11 @@ function game(){
 function mostrarMsg(msg){
 	console.log(msg);
     $('#msg').css('display', 'block');
-     $('#msg').text(msg);    
+    $('#msg').text(msg);
+    setTimeout(function(){
+        $('#msg').css('display', 'none');
+    }, 3000);
+    
 }
 
 function mostrarMsgGano(){
