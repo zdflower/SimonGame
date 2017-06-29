@@ -1,24 +1,18 @@
 /* FALTA
 
-**************** 
-hay un bug que aparece cuando te equivocás y después de que te vuelven a mostrar la secuencia empezás a clickear los botones.
-****************
-
-
 - podría haber un botón con un evento toggle que cuando lo clickeás una vez pone on en true
 - revisar todo el código javascript, tal vez algunas de las cosas que están acá sueltas podrían ser parte de la clase simon
 - limpiar el código
 - mejorar el aspecto de la página web
 - en el ejemplo que se muestra en fcc hay un tiempo para que el jugador responda, pasado ese período se da por equivocada la jugada
 - una vez que estén resueltos todos los demás problemas setear la meta en 20 etapas en lugar de 4 o 5 como es ahora.
+- testear el modo estricto
+- no queda claro si está en on u off o si está en modo normal o estricto, porque podés clickear los botones y tienen efecto pero en la página web, visualmente no se sabe.
+-podrían cambiar de color los botones de on/off y de modo para indicar que están en uno u otro, pero cuál sería la convención?
+-o también podría verse cuál es el estado en otro lado.
+
 */
 
-/* 
-	Hay varios estados:
-		el de mostrar secuencia
-		el de input
-		el de configuración del modo
-*/
 
 var sim;
 var jugador;
@@ -65,6 +59,7 @@ class Simon {
 //opciones es un array de cosas, se devuelve algo del tipo cosa
 //¿o conviene devolver el índice?
 function chooseOne(options){
+	//podría estar adentro y no recibir parámetro sino usar directamente this.COLORES
 	var res = Math.floor(Math.random() * options.length);
 	return options[res];
 }
@@ -74,7 +69,8 @@ function start(){
 	if(on){
 		setTimeout(function(){
 			console.log("start");
-			$('#msg').css('display', 'none');//"resetea" el mensaje. 
+			//$('#msg').css('display', 'none');//"deja de mostrar el mensaje. ¿no sería mejor borrarlo?
+			$('#msg').text(" ");
 			sim = new Simon();
 			//console.log("Etapa: " + sim.getStage());
 			siguienteEtapa();
@@ -91,10 +87,10 @@ function siguienteEtapa(){
 	//resetear chequeados
 	chequeados = 0;
 
-	console.log("antes de agregar etapa");
+	//console.log("antes de agregar etapa");
 	//console.log(sim.getStage());
 	sim.addNewStep();
-	console.log("agregué nuevo paso");
+	//console.log("agregué nuevo paso");
 	
 	//mostrar la etapa en la página
 	$('#etapa').text(sim.getStage());
@@ -104,8 +100,11 @@ function siguienteEtapa(){
 function mostrarSecuencia(){
     input = false;
     console.log(sim.getSequence());
-    
-    //analizar mejor para comprender bien cómo funciona lo siguiente:
+
+	// recurso indispensable para resolver este problema: 
+	// https://scottiestech.info/2014/07/01/javascript-fun-looping-with-a-delay/    
+
+    //analizar mejor para comprender bien cómo funciona:
     (function theLoop(count, len, sec){
       var elem = sec[count];//el primer carácter
       setTimeout(function(){
@@ -160,7 +159,9 @@ function mostrarMsg(msg){
     $('#msg').css('display', 'block');
     $('#msg').text(msg);
     setTimeout(function(){
-        $('#msg').css('display', 'none');
+        //$('#msg').css('display', 'none'); //sería mejor borrarlo?
+        $('#msg').text(" ");
+
     }, 3000);
     
 }
@@ -182,13 +183,14 @@ $(document).ready(function(){
 	$('.colores').on('click', function(){
 		if(on){
 		    var color = $(this).attr('id');
-            
-            clickButton(color);
 
-		    console.log(color);
+			clickButton(color);//quise poner esto dentro del if de abajo para que sólo se ejecute si input está habilitado pero no funcionó bien.
+  		    
+  		    console.log(color);
 			console.log("input: ", input);
 
 			if (input){//también podría chequear si on está en true
+
 				jugador = color;
 
                 //console.log(sim.getSequence());
@@ -209,33 +211,37 @@ $(document).ready(function(){
 					chequeados++;
 				}
 			}
-			//cómo llegás acá? una vez que hiciste bien la secuencia completa
+			//una vez que hiciste bien la secuencia completa...
 
-			console.log("chequeados: " + chequeados);
-			console.log('stage: ', sim.getStage());
-			console.log(sim.getSequence().length);
-			console.log("¿etapa igual que longitud de la secuencia?: ", sim.getStage() === sim.getSequence().length);
+			//console.log("chequeados: " + chequeados);
+			//console.log('stage: ', sim.getStage());
+			//console.log(sim.getSequence().length);
+			//console.log("¿etapa igual que longitud de la secuencia?: ", sim.getStage() === sim.getSequence().length);
 
 			if (chequeados >= sim.getSequence().length){//si ya chequeaste todo lo que tenías para clickear y estaba bien, pasá a la próxima etapa
-                setTimeout(function(){
-                	//antes de pasar a la siguiente etapa fijate si llegaste a la última
-                	if (sim.getStage() > 3){//3 para testear, reemplazar por 20.
-						mostrarMsgGano();
-						start();
-					} 
-					else {
-						siguienteEtapa();
-				    	mostrarSecuencia(); //¿debería estar mostrarSecuencia dentro de siguienteEtapa?
-					}
-                    
-                }, 3000);
+                   	setTimeout(function(){
+             	   		//antes de pasar a la siguiente etapa fijate si la actual es la última
+                		if (sim.getStage() > 4){//reemplazar por 20.
+							mostrarMsgGano();
+							start();
+						} 
+						else {
+							//¿acá tengo que chequear si on es true o false?
+							siguienteEtapa();
+				    		mostrarSecuencia(); //¿debería estar mostrarSecuencia dentro de siguienteEtapa?
+						}
+	                }, 3000);
 			}
 		}
 	});
 
 	$('#modo').on('click', changeMode);
 
-	$('#restart').on('click', start);
+	$('#restart').on('click', function(){
+		if(on){
+			start();
+		}
+	});
 
 	$('#interruptor').on('click', function(){
 		//(on === true)? on = false : true;
