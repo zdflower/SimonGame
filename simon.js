@@ -20,7 +20,7 @@ var jugador;
 var on = false; //esto para cuando haya un botón de encendido y si on es false se puede cambiar el modo del juego y después clickear en start.
 var estricto = false;
 var restart = false;
-var input = true;
+var input = false;//tiene que empezar en false para que no puedas clickear ni bien clickeaste on, antes de cualquier cosa
 
 var sonido = document.getElementById('audio');
 var SOUNDmap = {'red': 'simonSound1.mp3', 'blue': 'simonSound2.mp3', 'green': 'simonSound3.mp3', 'yellow': 'simonSound4.mp3'};
@@ -181,15 +181,15 @@ $(document).ready(function(){
 
 	/* setear eventos */
 	$('.colores').on('click', function(){
-		if(on){
+		//console.log("input? ", input);
+		if(on && input){
 		    var color = $(this).attr('id');
 
 			clickButton(color);//quise poner esto dentro del if de abajo para que sólo se ejecute si input está habilitado pero no funcionó bien.
   		    
   		    console.log(color);
-			console.log("input: ", input);
-
-			if (input){//también podría chequear si on está en true
+		
+			//if (input){
 
 				jugador = color;
 
@@ -210,7 +210,9 @@ $(document).ready(function(){
 				} else {
 					chequeados++;
 				}
-			}
+		
+			//}
+		
 			//una vez que hiciste bien la secuencia completa...
 
 			//console.log("chequeados: " + chequeados);
