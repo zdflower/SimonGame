@@ -201,6 +201,8 @@ $(document).ready(function(){
 				
 				if(!jugadaOK){
 					//desactivás el input
+					//reseteás chequeados porque vas a volver as empezar
+					chequeados = 0;
 					//llamás a una función que te indica el error y que luego si el modo es normal te vuelve a mostrar la secuencia y después rehabilita el input para que el usuario pueda ingresar su secuencia
 					manejarJugadaErronea();
 				} else {
