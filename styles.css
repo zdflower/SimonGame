@@ -3,7 +3,8 @@ body {
 }
 
 .container {
-	padding-top: 5%;
+	padding-top: 25px;
+	padding-bottom: 25px;
 	background-color: #fff;
 	margin: auto;
 	text-align: center;
@@ -16,13 +17,15 @@ body {
 	border-bottom-right-radius: 50%;
 	background-color: orchid;
 	width: 160px;
-	margin: auto;
+	height: 140px;
+	margin: 25px auto;
+	display: block;
 }
 
 #red, #yellow, #blue, #green {
 	margin: auto;
-	width: 60px;
-	height: 40px;
+	width: 100px;
+	height: 80px;
 }
 
 #red {

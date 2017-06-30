@@ -1,15 +1,18 @@
 /* FALTA
 
-- podría haber un botón con un evento toggle que cuando lo clickeás una vez pone on en true
+bug: clickeás on/off para apagar y permite que se siga mostrando la secuencia que estaba en marcha.
+
+-no me gustan mucho los botones de configuración.
+no queda claro si está en on u off o si está en modo normal o estricto, porque podés clickear los botones y tienen efecto pero en la página web, visualmente no se sabe.
+-podrían cambiar de color los botones de on/off y de modo para indicar que están en uno u otro, pero cuál sería la convención?
+-o también podría verse cuál es el estado en otro lado.
+
 - revisar todo el código javascript, tal vez algunas de las cosas que están acá sueltas podrían ser parte de la clase simon
 - limpiar el código
 - mejorar el aspecto de la página web
 - en el ejemplo que se muestra en fcc hay un tiempo para que el jugador responda, pasado ese período se da por equivocada la jugada
 - una vez que estén resueltos todos los demás problemas setear la meta en 20 etapas en lugar de 4 o 5 como es ahora.
-- testear el modo estricto
-- no queda claro si está en on u off o si está en modo normal o estricto, porque podés clickear los botones y tienen efecto pero en la página web, visualmente no se sabe.
--podrían cambiar de color los botones de on/off y de modo para indicar que están en uno u otro, pero cuál sería la convención?
--o también podría verse cuál es el estado en otro lado.
+
 
 */
 
@@ -181,7 +184,7 @@ $(document).ready(function(){
 
 	/* setear eventos */
 	$('.colores').on('click', function(){
-		//console.log("input? ", input);
+		console.log("input? ", input);
 		if(on && input){
 		    var color = $(this).attr('id');
 
@@ -250,14 +253,18 @@ $(document).ready(function(){
 		if (on === true){
 			$('#etapa').text("--");
 			on = false;
+			restart = false;
+			input = false;
+			$("#interruptor").text("OFF");
 			//resetear el display de la etapa
-
 			//y podría sacarles la clase colores a los colores
 		} else {
 			on = true;
+			$("#interruptor").text("ON");
 			//y acá le vuelve a poner la clase colores a los colores
 		}
 		console.log("on? " + on);
+		console.log("input? ", input);
 	});
 
 });
