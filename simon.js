@@ -1,37 +1,17 @@
-/* FALTA
-
-bug: clickeás on/off para apagar y permite que se siga mostrando la secuencia que estaba en marcha.
-
--no me gustan mucho los botones de configuración.
-no queda claro si está en on u off o si está en modo normal o estricto, porque podés clickear los botones y tienen efecto pero en la página web, visualmente no se sabe.
--podrían cambiar de color los botones de on/off y de modo para indicar que están en uno u otro, pero cuál sería la convención?
--o también podría verse cuál es el estado en otro lado.
-
-- revisar todo el código javascript, tal vez algunas de las cosas que están acá sueltas podrían ser parte de la clase simon
-- limpiar el código
-- mejorar el aspecto de la página web
-- en el ejemplo que se muestra en fcc hay un tiempo para que el jugador responda, pasado ese período se da por equivocada la jugada
-- una vez que estén resueltos todos los demás problemas setear la meta en 20 etapas en lugar de 4 o 5 como es ahora.
-
-
-*/
-
-
 var sim;
 var jugador;
 
-var on = false; //esto para cuando haya un botón de encendido y si on es false se puede cambiar el modo del juego y después clickear en start.
+var on = false; 
 var estricto = false;
 var restart = false;
 var input = false;//tiene que empezar en false para que no puedas clickear ni bien clickeaste on, antes de cualquier cosa
 
 var sonido = document.getElementById('audio');
-var SOUNDmap = {'red': 'simonSound1.mp3', 'blue': 'simonSound2.mp3', 'green': 'simonSound3.mp3', 'yellow': 'simonSound4.mp3'};
+var SOUNDmap = {'red': 'https://s3.amazonaws.com/freecodecamp/simonSound1.mp3', 'blue': 'https://s3.amazonaws.com/freecodecamp/simonSound2.mp3', 'green': 'https://s3.amazonaws.com/freecodecamp/simonSound3.mp3', 'yellow': 'https://s3.amazonaws.com/freecodecamp/simonSound4.mp3'};
 var COLORESmap = {'red': 'rgba(255, 0, 0, 0.5)', 'blue': 'rgba(0,0,255,0.5)', 'green': 'rgba(0,255,0,0.5)', 'yellow': 'rgba(255,255,0,0.2'};
 
 var jugadaOK = true;
 var chequeados = 0;
-
 
 class Simon {
 	constructor(){
@@ -60,7 +40,6 @@ class Simon {
 
 //elige al azar una de las opciones (un array) y la devuelve
 //opciones es un array de cosas, se devuelve algo del tipo cosa
-//¿o conviene devolver el índice?
 function chooseOne(options){
 	//podría estar adentro y no recibir parámetro sino usar directamente this.COLORES
 	var res = Math.floor(Math.random() * options.length);
@@ -68,14 +47,12 @@ function chooseOne(options){
 }
 
 function start(){
-	//ok, pero cómo interrumpís una vez que empezó un juego? con el botón de on/off
 	if(on){
 		setTimeout(function(){
 			console.log("start");
-			//$('#msg').css('display', 'none');//"deja de mostrar el mensaje. ¿no sería mejor borrarlo?
 			$('#msg').text(" ");
 			sim = new Simon();
-			//console.log("Etapa: " + sim.getStage());
+
 			siguienteEtapa();
 			mostrarSecuencia();
         }, 2000);	
@@ -90,10 +67,7 @@ function siguienteEtapa(){
 	//resetear chequeados
 	chequeados = 0;
 
-	//console.log("antes de agregar etapa");
-	//console.log(sim.getStage());
 	sim.addNewStep();
-	//console.log("agregué nuevo paso");
 	
 	//mostrar la etapa en la página
 	$('#etapa').text(sim.getStage());
@@ -106,8 +80,6 @@ function mostrarSecuencia(){
 
 	// recurso indispensable para resolver este problema: 
 	// https://scottiestech.info/2014/07/01/javascript-fun-looping-with-a-delay/    
-
-    //analizar mejor para comprender bien cómo funciona:
     (function theLoop(count, len, sec){
       var elem = sec[count];//el primer carácter
       setTimeout(function(){
@@ -162,11 +134,8 @@ function mostrarMsg(msg){
     $('#msg').css('display', 'block');
     $('#msg').text(msg);
     setTimeout(function(){
-        //$('#msg').css('display', 'none'); //sería mejor borrarlo?
         $('#msg').text(" ");
-
     }, 3000);
-    
 }
 
 function mostrarMsgGano(){
@@ -176,7 +145,6 @@ function mostrarMsgGano(){
 function mostrarMsgError(){
 	mostrarMsg("Te equivocaste. Volvé a intentar.");    
 }
-
     
 $(document).ready(function(){
 
@@ -188,18 +156,12 @@ $(document).ready(function(){
 		if(on && input){
 		    var color = $(this).attr('id');
 
-			clickButton(color);//quise poner esto dentro del if de abajo para que sólo se ejecute si input está habilitado pero no funcionó bien.
-  		    
-  		    console.log(color);
+			clickButton(color);
+    
+ 		    console.log(color);
 		
-			//if (input){
-
 				jugador = color;
-
-                //console.log(sim.getSequence());
-				//console.log("Stage:" + sim.getStage());
-				//console.log(sim.getSequence()[chequeados]);
-
+                
 				jugadaOK = sim.getSequence()[chequeados] == jugador;
 
 				console.log("jugadaOK" + jugadaOK);
@@ -214,14 +176,7 @@ $(document).ready(function(){
 					chequeados++;
 				}
 		
-			//}
-		
 			//una vez que hiciste bien la secuencia completa...
-
-			//console.log("chequeados: " + chequeados);
-			//console.log('stage: ', sim.getStage());
-			//console.log(sim.getSequence().length);
-			//console.log("¿etapa igual que longitud de la secuencia?: ", sim.getStage() === sim.getSequence().length);
 
 			if (chequeados >= sim.getSequence().length){//si ya chequeaste todo lo que tenías para clickear y estaba bien, pasá a la próxima etapa
                    	setTimeout(function(){
@@ -231,7 +186,6 @@ $(document).ready(function(){
 							start();
 						} 
 						else {
-							//¿acá tengo que chequear si on es true o false?
 							siguienteEtapa();
 				    		mostrarSecuencia(); //¿debería estar mostrarSecuencia dentro de siguienteEtapa?
 						}
@@ -249,7 +203,6 @@ $(document).ready(function(){
 	});
 
 	$('#interruptor').on('click', function(){
-		//(on === true)? on = false : true;
 		if (on === true){
 			$('#etapa').text("--");
 			on = false;
